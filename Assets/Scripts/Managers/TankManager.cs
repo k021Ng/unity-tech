@@ -63,6 +63,7 @@ public class TankManager {
 
 		// TODO
 		// 为什么这里需要先false在true
+		// false是让其调用Disable，然后调用Enable
 		m_Instance.SetActive (false);
 		m_Instance.SetActive (true);
 	}

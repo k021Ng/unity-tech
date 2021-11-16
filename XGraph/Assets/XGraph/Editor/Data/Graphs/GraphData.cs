@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace XGraph
 {
@@ -102,33 +103,164 @@ namespace XGraph
             // didActiveOutputNodeChange = false;
         }
 
-        public void AddNode(AbstractMaterialNode node)
+        public void AddNode(BaseNode node)
         {
-            if (node is AbstractMaterialNode materialNode)
+            // check
+
+            AddNodeNoValidate(node);
+
+            // If adding a Sub Graph node whose asset contains Keywords
+            // Need to restest Keywords against the variant limit
+            // if(node is SubGraphNode subGraphNode &&
+            //     subGraphNode.asset != null && 
+            //     subGraphNode.asset.keywords.Count > 0)
+            // {
+            //     OnKeywordChangedNoValidate();
+            // }
+
+            ValidateGraph();
+        }
+
+        [NonSerialized]
+        Stack<Identifier> m_FreeNodeTempIds = new Stack<Identifier>();
+                [NonSerialized]
+        List<BaseNode> m_Nodes = new List<BaseNode>();
+        [NonSerialized]
+        Dictionary<Guid, BaseNode> m_NodeDictionary = new Dictionary<Guid, BaseNode>();
+                [NonSerialized]
+        List<BaseNode> m_AddedNodes = new List<BaseNode>();
+
+        private void AddNodeNoValidate(BaseNode node)
+        {
+            if (node.groupGuid != Guid.Empty && !m_GroupItems.ContainsKey(node.groupGuid))
             {
-                if (isSubGraph && !materialNode.allowedInSubGraph)
-                {
-                    Debug.LogWarningFormat("Attempting to add {0} to Sub Graph. This is not allowed.", materialNode.GetType());
-                    return;
-                }
-
-                AddNodeNoValidate(materialNode);
-
-                // If adding a Sub Graph node whose asset contains Keywords
-                // Need to restest Keywords against the variant limit
-                if(node is SubGraphNode subGraphNode &&
-                    subGraphNode.asset != null && 
-                    subGraphNode.asset.keywords.Count > 0)
-                {
-                    OnKeywordChangedNoValidate();
-                }
-
-                ValidateGraph();
+                throw new InvalidOperationException("Cannot add a node whose group doesn't exist.");
+            }
+            node.owner = this;
+            if (m_FreeNodeTempIds.Any())
+            {
+                var id = m_FreeNodeTempIds.Pop();
+                id.IncrementVersion();
+                node.tempId = id;
+                m_Nodes[id.index] = node;
             }
             else
             {
-                Debug.LogWarningFormat("Trying to add node {0} to Material graph, but it is not a {1}", node, typeof(AbstractMaterialNode));
+                var id = new Identifier(m_Nodes.Count);
+                node.tempId = id;
+                m_Nodes.Add(node);
             }
+            m_NodeDictionary.Add(node.guid, node);
+            m_AddedNodes.Add(node);
+            m_GroupItems[node.groupGuid].Add(node);
+        }
+
+          public void ValidateGraph()
+        {
+            // var propertyNodes = GetNodes<PropertyNode>().Where(n => !m_Properties.Any(p => p.guid == n.propertyGuid)).ToArray();
+            // foreach (var pNode in propertyNodes)
+            //     ReplacePropertyNodeWithConcreteNodeNoValidate(pNode);
+
+            // messageManager?.ClearAllFromProvider(this);
+            // //First validate edges, remove any
+            // //orphans. This can happen if a user
+            // //manually modifies serialized data
+            // //of if they delete a node in the inspector
+            // //debug view.
+            // foreach (var edge in edges.ToArray())
+            // {
+            //     var outputNode = GetNodeFromGuid(edge.outputSlot.nodeGuid);
+            //     var inputNode = GetNodeFromGuid(edge.inputSlot.nodeGuid);
+
+            //     MaterialSlot outputSlot = null;
+            //     MaterialSlot inputSlot = null;
+            //     if (outputNode != null && inputNode != null)
+            //     {
+            //         outputSlot = outputNode.FindOutputSlot<MaterialSlot>(edge.outputSlot.slotId);
+            //         inputSlot = inputNode.FindInputSlot<MaterialSlot>(edge.inputSlot.slotId);
+            //     }
+
+            //     if (outputNode == null
+            //         || inputNode == null
+            //         || outputSlot == null
+            //         || inputSlot == null)
+            //     {
+            //         //orphaned edge
+            //         RemoveEdgeNoValidate(edge);
+            //     }
+            // }
+
+            // var temporaryMarks = IndexSetPool.Get();
+            // var permanentMarks = IndexSetPool.Get();
+            // var slots = ListPool<MaterialSlot>.Get();
+
+            // // Make sure we process a node's children before the node itself.
+            // var stack = StackPool<AbstractMaterialNode>.Get();
+            // foreach (var node in GetNodes<AbstractMaterialNode>())
+            // {
+            //     stack.Push(node);
+            // }
+            // while (stack.Count > 0)
+            // {
+            //     var node = stack.Pop();
+            //     if (permanentMarks.Contains(node.tempId.index))
+            //     {
+            //         continue;
+            //     }
+
+            //     if (temporaryMarks.Contains(node.tempId.index))
+            //     {
+            //         node.ValidateNode();
+            //         permanentMarks.Add(node.tempId.index);
+            //     }
+            //     else
+            //     {
+            //         temporaryMarks.Add(node.tempId.index);
+            //         stack.Push(node);
+            //         node.GetInputSlots(slots);
+            //         foreach (var inputSlot in slots)
+            //         {
+            //             var nodeEdges = GetEdges(inputSlot.slotReference);
+            //             foreach (var edge in nodeEdges)
+            //             {
+            //                 var fromSocketRef = edge.outputSlot;
+            //                 var childNode = GetNodeFromGuid(fromSocketRef.nodeGuid);
+            //                 if (childNode != null)
+            //                 {
+            //                     stack.Push(childNode);
+            //                 }
+            //             }
+            //         }
+            //         slots.Clear();
+            //     }
+            // }
+
+            // StackPool<AbstractMaterialNode>.Release(stack);
+            // ListPool<MaterialSlot>.Release(slots);
+            // IndexSetPool.Release(temporaryMarks);
+            // IndexSetPool.Release(permanentMarks);
+
+            // foreach (var edge in m_AddedEdges.ToList())
+            // {
+            //     if (!ContainsNodeGuid(edge.outputSlot.nodeGuid) || !ContainsNodeGuid(edge.inputSlot.nodeGuid))
+            //     {
+            //         Debug.LogWarningFormat("Added edge is invalid: {0} -> {1}\n{2}", edge.outputSlot.nodeGuid, edge.inputSlot.nodeGuid, Environment.StackTrace);
+            //         m_AddedEdges.Remove(edge);
+            //     }
+            // }
+
+            // foreach (var groupChange in m_ParentGroupChanges.ToList())
+            // {
+            //     if (groupChange.groupItem is AbstractMaterialNode node && !ContainsNodeGuid(node.guid))
+            //     {
+            //         m_ParentGroupChanges.Remove(groupChange);
+            //     }
+
+            //     if (groupChange.groupItem is StickyNoteData stickyNote && !m_StickyNotes.Contains(stickyNote))
+            //     {
+            //         m_ParentGroupChanges.Remove(groupChange);
+            //     }
+            // }
         }
     }
 }

@@ -9,10 +9,21 @@ using UnityEditor.ShaderGraph.Internal;
 namespace XGraph
 {
     [Serializable]
-    abstract class BaseNode : ISerializationCallbackReceiver, IGroupItem
+    public abstract class BaseNode : ISerializationCallbackReceiver, IGroupItem
     {
         [NonSerialized]
         Guid m_GroupGuid;
+
+        public Identifier tempId { get; set; }
+        public GraphData owner { get; set; }
+
+        [NonSerialized]
+        private Guid m_Guid;
+
+        public Guid guid
+        {
+            get { return m_Guid; }
+        }
 
         public Guid groupGuid
         {

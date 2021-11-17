@@ -10,6 +10,27 @@ namespace XGraph
         
         [NonSerialized]
         Dictionary<Guid, List<IGroupItem>> m_GroupItems = new Dictionary<Guid, List<IGroupItem>>();
+        public string assetGuid { get; set; }
+        public MessageManager messageManager { get; set; }
+
+        public GraphObject owner { get; set; }
+         public bool isSubGraph { get; set; }
+
+        [SerializeField]
+        string m_Path;
+
+        public string path
+        {
+            get { return m_Path; }
+            set
+            {
+                if (m_Path == value)
+                    return;
+                m_Path = value;
+                if(owner != null)
+                    owner.RegisterCompleteObjectUndo("Change Path");
+            }
+        }
 
         public GraphData()
         {
@@ -261,6 +282,116 @@ namespace XGraph
             //         m_ParentGroupChanges.Remove(groupChange);
             //     }
             // }
+        }
+
+        public IEnumerable<T> GetNodes<T>()
+        {
+            return m_Nodes.Where(x => x != null).OfType<T>();
+        }
+
+        public void OnEnable()
+        {
+            // foreach (var node in GetNodes<BaseNode>().OfType<IOnAssetEnabled>())
+            // {
+            //     node.OnEnable();
+            // }
+
+            // ShaderGraphPreferences.onVariantLimitChanged += OnKeywordChanged;
+        }
+
+        public void OnDisable()
+        {
+            // ShaderGraphPreferences.onVariantLimitChanged -= OnKeywordChanged;
+        }
+
+     public void ReplaceWith(GraphData other)
+        {
+            // if (other == null)
+            //     throw new ArgumentException("Can only replace with another AbstractMaterialGraph", "other");
+
+            // concretePrecision = other.concretePrecision;
+            // m_ActiveOutputNodeGuid = other.m_ActiveOutputNodeGuid;
+
+            // using (var removedInputsPooledObject = ListPool<Guid>.GetDisposable())
+            // {
+            //     var removedInputGuids = removedInputsPooledObject.value;
+            //     foreach (var property in m_Properties)
+            //         removedInputGuids.Add(property.guid);
+            //     foreach (var keyword in m_Keywords)
+            //         removedInputGuids.Add(keyword.guid);
+            //     foreach (var inputGuid in removedInputGuids)
+            //         RemoveGraphInputNoValidate(inputGuid);
+            // }
+            // foreach (var otherProperty in other.properties)
+            // {
+            //     if (!properties.Any(p => p.guid == otherProperty.guid))
+            //         AddGraphInput(otherProperty);
+            // }
+            // foreach (var otherKeyword in other.keywords)
+            // {
+            //     if (!keywords.Any(p => p.guid == otherKeyword.guid))
+            //         AddGraphInput(otherKeyword);
+            // }
+
+            // other.ValidateGraph();
+            // ValidateGraph();
+
+            // // Current tactic is to remove all nodes and edges and then re-add them, such that depending systems
+            // // will re-initialize with new references.
+
+            // using (var removedGroupsPooledObject = ListPool<GroupData>.GetDisposable())
+            // {
+            //     var removedGroupDatas = removedGroupsPooledObject.value;
+            //     removedGroupDatas.AddRange(m_Groups);
+            //     foreach (var groupData in removedGroupDatas)
+            //     {
+            //         RemoveGroupNoValidate(groupData);
+            //     }
+            // }
+
+            // using (var removedNotesPooledObject = ListPool<StickyNoteData>.GetDisposable())
+            // {
+            //     var removedNoteDatas = removedNotesPooledObject.value;
+            //     removedNoteDatas.AddRange(m_StickyNotes);
+            //     foreach (var groupData in removedNoteDatas)
+            //     {
+            //         RemoveNoteNoValidate(groupData);
+            //     }
+            // }
+
+            // using (var pooledList = ListPool<IEdge>.GetDisposable())
+            // {
+            //     var removedNodeEdges = pooledList.value;
+            //     removedNodeEdges.AddRange(m_Edges);
+            //     foreach (var edge in removedNodeEdges)
+            //         RemoveEdgeNoValidate(edge);
+            // }
+
+            // using (var removedNodesPooledObject = ListPool<Guid>.GetDisposable())
+            // {
+            //     var removedNodeGuids = removedNodesPooledObject.value;
+            //     removedNodeGuids.AddRange(m_Nodes.Where(n => n != null).Select(n => n.guid));
+            //     foreach (var nodeGuid in removedNodeGuids)
+            //         RemoveNodeNoValidate(m_NodeDictionary[nodeGuid]);
+            // }
+
+            // ValidateGraph();
+
+            // foreach (GroupData groupData in other.groups)
+            //     AddGroup(groupData);
+
+            // foreach (var stickyNote in other.stickyNotes)
+            // {
+            //     AddStickyNote(stickyNote);
+            // }
+
+            // foreach (var node in other.GetNodes<AbstractMaterialNode>())
+            //     AddNodeNoValidate(node);
+
+            // foreach (var edge in other.edges)
+            //     ConnectNoValidate(edge.outputSlot, edge.inputSlot);
+
+            // ValidateGraph();
         }
     }
 }

@@ -393,5 +393,29 @@ namespace XGraph
 
             // ValidateGraph();
         }
+
+   [NonSerialized]
+        private BaseNode m_OutputNode;
+
+        public BaseNode outputNode
+        {
+            get
+            {
+                // find existing node
+                if (m_OutputNode == null)
+                {
+                    // if (isSubGraph)
+                    // {
+                    //     m_OutputNode = GetNodes<SubGraphOutputNode>().FirstOrDefault();
+                    // }
+                    // else
+                    {
+                        m_OutputNode = GetNodeFromGuid(m_ActiveOutputNodeGuid);
+                    }
+                }
+
+                return m_OutputNode;
+            }
+        }
     }
 }

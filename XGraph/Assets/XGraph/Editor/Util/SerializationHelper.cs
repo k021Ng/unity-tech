@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace XGraph
 {
-    static class SerializationHelper
+    public static class SerializationHelper
     {
         [Serializable]
         public struct TypeSerializationInfo

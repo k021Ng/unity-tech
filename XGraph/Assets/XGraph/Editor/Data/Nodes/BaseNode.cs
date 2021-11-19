@@ -31,6 +31,14 @@ namespace XGraph
             set { m_GroupGuid = value; }
         }
 
+        [SerializeField]
+        private string m_Name;
+            public string name
+        {
+            get { return m_Name; }
+            set { m_Name = value; }
+        }
+
 
         public virtual void OnBeforeSerialize()
         {
@@ -116,6 +124,24 @@ namespace XGraph
             foreach (var slot in m_Slots)
             {
                 if (slot is T)
+                    foundSlots.Add((T)slot);
+            }
+        }
+
+     public void GetInputSlots<T>(List<T> foundSlots) where T : ISlot
+        {
+            foreach (var slot in m_Slots)
+            {
+                if (slot.isInputSlot && slot is T)
+                    foundSlots.Add((T)slot);
+            }
+        }
+
+        public void GetOutputSlots<T>(List<T> foundSlots) where T : ISlot
+        {
+            foreach (var slot in m_Slots)
+            {
+                if (slot.isOutputSlot && slot is T)
                     foundSlots.Add((T)slot);
             }
         }

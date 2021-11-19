@@ -27,21 +27,21 @@ namespace XGraph
             get { return PreviewMode.Preview3D; }
         }
 
-        [SerializeField]
-        bool m_DOTSInstancing = false;
+        // [SerializeField]
+        // bool m_DOTSInstancing = false;
 
-        public ToggleData dotsInstancing
-        {
-            get { return new ToggleData(m_DOTSInstancing); }
-            set
-            {
-                if (m_DOTSInstancing == value.isOn)
-                    return;
+        // public ToggleData dotsInstancing
+        // {
+        //     get { return new ToggleData(m_DOTSInstancing); }
+        //     set
+        //     {
+        //         if (m_DOTSInstancing == value.isOn)
+        //             return;
 
-                m_DOTSInstancing = value.isOn;
-                Dirty(ModificationScope.Graph);
-            }
-        }
+        //         m_DOTSInstancing = value.isOn;
+        //         Dirty(ModificationScope.Graph);
+        //     }
+        // }
 
         // public abstract string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null);
         public abstract bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset);
@@ -68,7 +68,7 @@ namespace XGraph
     }
 
     [Serializable]
-    abstract class MasterNode<T> : MasterNode
+    class MasterNode<T> : MasterNode
         where T : class, ISubShader
     {
         [NonSerialized]

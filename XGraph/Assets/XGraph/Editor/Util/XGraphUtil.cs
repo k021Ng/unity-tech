@@ -16,14 +16,14 @@ namespace XGraph
         [MenuItem("Tools/XGraph", false, 208)]
         public static void CreateUnlitMasterMaterialGraph()
         {
-            XGraphUtil.CreateNewGraph(new UnlitMasterNode());
+            XGraphUtil.CreateNewGraph(new MasterNode<ISubShader>());
         }
 
         public static void CreateNewGraph(BaseNode node)
         {
             var graphItem = ScriptableObject.CreateInstance<NewGraphAction>();
             graphItem.node = node;
-            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, graphItem,
+        ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, graphItem,
                 string.Format("New Shader Graph.{0}", XGraphImporter.Extension), null, null);
         }
 

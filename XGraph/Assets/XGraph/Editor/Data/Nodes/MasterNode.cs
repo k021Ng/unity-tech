@@ -43,7 +43,7 @@ namespace XGraph
         //     }
         // }
 
-        // public abstract string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null);
+        public abstract string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null);
         public abstract bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset);
         public abstract int GetPreviewPassIndex();
 
@@ -104,59 +104,61 @@ namespace XGraph
             return null;
         }
 
-        // public sealed override string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null)
-        // {
-        //     var activeNodeList = Graphing.ListPool<AbstractMaterialNode>.Get();
-        //     NodeUtils.DepthFirstCollectNodesFromNode(activeNodeList, this);
+        public sealed override string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null)
+        {
+            configuredTextures = null;
+            return "empty-shader";
+            // var activeNodeList = Graphing.ListPool<BaseNode>.Get();
+            // NodeUtils.DepthFirstCollectNodesFromNode(activeNodeList, this);
 
-        //     var shaderProperties = new PropertyCollector();
-        //     var shaderKeywords = new KeywordCollector();
-        //     if (owner != null)
-        //     {
-        //         owner.CollectShaderProperties(shaderProperties, mode);
-        //         owner.CollectShaderKeywords(shaderKeywords, mode);
-        //     }
+            // var shaderProperties = new PropertyCollector();
+            // var shaderKeywords = new KeywordCollector();
+            // if (owner != null)
+            // {
+            //     owner.CollectShaderProperties(shaderProperties, mode);
+            //     owner.CollectShaderKeywords(shaderKeywords, mode);
+            // }
 
-        //     if(owner.GetKeywordPermutationCount() > ShaderGraphPreferences.variantLimit)
-        //     {
-        //         owner.AddValidationError(tempId, ShaderKeyword.kVariantLimitWarning, Rendering.ShaderCompilerMessageSeverity.Error);
+            // if(owner.GetKeywordPermutationCount() > ShaderGraphPreferences.variantLimit)
+            // {
+            //     owner.AddValidationError(tempId, ShaderKeyword.kVariantLimitWarning, Rendering.ShaderCompilerMessageSeverity.Error);
 
-        //         configuredTextures = shaderProperties.GetConfiguredTexutres();
-        //         return ShaderGraphImporter.k_ErrorShader;
-        //     }
+            //     configuredTextures = shaderProperties.GetConfiguredTexutres();
+            //     return ShaderGraphImporter.k_ErrorShader;
+            // }
 
-        //     foreach (var activeNode in activeNodeList.OfType<AbstractMaterialNode>())
-        //         activeNode.CollectShaderProperties(shaderProperties, mode);
+            // foreach (var activeNode in activeNodeList.OfType<AbstractMaterialNode>())
+            //     activeNode.CollectShaderProperties(shaderProperties, mode);
 
-        //     var finalShader = new ShaderStringBuilder();
-        //     finalShader.AppendLine(@"Shader ""{0}""", outputName);
-        //     using (finalShader.BlockScope())
-        //     {
-        //         SubShaderGenerator.GeneratePropertiesBlock(finalShader, shaderProperties, shaderKeywords, mode);
+            // var finalShader = new ShaderStringBuilder();
+            // finalShader.AppendLine(@"Shader ""{0}""", outputName);
+            // using (finalShader.BlockScope())
+            // {
+            //     SubShaderGenerator.GeneratePropertiesBlock(finalShader, shaderProperties, shaderKeywords, mode);
 
-        //         foreach (var subShader in m_SubShaders)
-        //         {
-        //             if (mode != GenerationMode.Preview || subShader.IsPipelineCompatible(GraphicsSettings.renderPipelineAsset))
-        //                 finalShader.AppendLines(subShader.GetSubshader(this, mode, sourceAssetDependencyPaths));
-        //         }
+            //     foreach (var subShader in m_SubShaders)
+            //     {
+            //         if (mode != GenerationMode.Preview || subShader.IsPipelineCompatible(GraphicsSettings.renderPipelineAsset))
+            //             finalShader.AppendLines(subShader.GetSubshader(this, mode, sourceAssetDependencyPaths));
+            //     }
 
-        //         // Either grab the pipeline default for the active master node or the user override
-        //         ICanChangeShaderGUI canChangeShaderGui = this as ICanChangeShaderGUI;
-        //         if (canChangeShaderGui != null && canChangeShaderGui.OverrideEnabled)
-        //         {
-        //             string customEditor = GenerationUtils.FinalCustomEditorString(canChangeShaderGui);
+            //     // Either grab the pipeline default for the active master node or the user override
+            //     ICanChangeShaderGUI canChangeShaderGui = this as ICanChangeShaderGUI;
+            //     if (canChangeShaderGui != null && canChangeShaderGui.OverrideEnabled)
+            //     {
+            //         string customEditor = GenerationUtils.FinalCustomEditorString(canChangeShaderGui);
 
-        //             if (customEditor != null)
-        //             {
-        //                 finalShader.AppendLine("CustomEditor \"" + customEditor + "\"");
-        //             }
-        //         }
+            //         if (customEditor != null)
+            //         {
+            //             finalShader.AppendLine("CustomEditor \"" + customEditor + "\"");
+            //         }
+            //     }
 
-        //         finalShader.AppendLine(@"FallBack ""Hidden/Shader Graph/FallbackError""");
-        //     }
-        //     configuredTextures = shaderProperties.GetConfiguredTexutres();
-        //     return finalShader.ToString();
-        // }
+            //     finalShader.AppendLine(@"FallBack ""Hidden/Shader Graph/FallbackError""");
+            // }
+            // configuredTextures = shaderProperties.GetConfiguredTexutres();
+            // return finalShader.ToString();
+        }
 
         public sealed override bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset)
         {

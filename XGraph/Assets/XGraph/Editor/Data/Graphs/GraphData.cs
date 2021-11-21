@@ -397,6 +397,17 @@ namespace XGraph
    [NonSerialized]
         private BaseNode m_OutputNode;
 
+        [NonSerialized]
+        Guid m_ActiveOutputNodeGuid;
+
+        public BaseNode GetNodeFromGuid(Guid guid)
+        {
+            BaseNode node;
+            m_NodeDictionary.TryGetValue(guid, out node);
+            return node;
+        }
+
+
         public BaseNode outputNode
         {
             get
@@ -416,6 +427,18 @@ namespace XGraph
 
                 return m_OutputNode;
             }
+        }
+
+        public BaseNode GetNodeFromTempId(Identifier tempId)
+        {
+            if (tempId.index > m_Nodes.Count)
+                throw new ArgumentException("Trying to retrieve a node using an identifier that does not exist.");
+            var node = m_Nodes[tempId.index];
+            if (node == null)
+                throw new Exception("Trying to retrieve a node using an identifier that does not exist.");
+            if (node.tempId.version != tempId.version)
+                throw new Exception("Trying to retrieve a node that was removed from the graph.");
+            return node;
         }
     }
 }

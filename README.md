@@ -9,6 +9,7 @@
 [+]引用丢失，比如 EventTrigger.PointClick, 当回掉函数修改了，在 UnityEditor 里面设置的引用就丢失，查找起来太麻烦  
 [+]Unity Editor 扩展代码示例
 [+]DPI
+[+]Avatar 换装  
 
 ##LINK:
 [+]https://catlikecoding.com/unity/tutorials/

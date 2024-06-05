@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEditor;
 
 namespace XGraph
 {
-    [ScriptedImporter(31, Extension, 3)]
-    public class XGraphImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(31, Extension, 3)]
+    public class XGraphImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public const string Extension = "xgh";
 
@@ -56,7 +56,7 @@ Shader ""Hidden/GraphErrorShader2""
     Fallback Off
 }";
 
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             var oldShader = AssetDatabase.LoadAssetAtPath<Shader>(ctx.assetPath);
             // if (oldShader != null)

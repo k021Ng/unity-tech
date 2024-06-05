@@ -6,8 +6,9 @@
 5. 将 fbx 和 bake 图片导入 unity  
 
 ## Unity
-1. 去掉灯光  
-2. 修改 Lighting 下面的 Environment 设置，去掉灯光，将颜色设置为白色  
+1. 颜色空间修改为 linear  
+2. 去掉灯光  
+3. 修改 Lighting 下面的 Environment 设置，去掉灯光，将颜色设置为白色  
 
 ## 问题
 1. blender 渲染出来的图片与渲染窗口还是不一致（太暗了）  

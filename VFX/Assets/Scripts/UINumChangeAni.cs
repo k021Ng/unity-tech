@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+// using DG.Tweening;
 
 [RequireComponent(typeof(Text))]
 public class UINumChangeAni : MonoBehaviour 
@@ -31,7 +31,7 @@ public class UINumChangeAni : MonoBehaviour
 		interval = Mathf.Max(0.017f, interval);
 
 		label = GetComponent<Text>();
-		DebugUtil.Assert(label != null, "CHECK");
+		// DebugUtil.Assert(label != null, "CHECK");
 	}
 
 	// test
